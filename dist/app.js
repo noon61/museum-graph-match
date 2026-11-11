@@ -342,8 +342,10 @@ function renderResult(scores) {
   $("#score").textContent = scores.total;
   $("#direction-score").textContent = `${scores.direction}%`;
   $("#position-score").textContent = `${scores.position}%`;
-  const messages = scores.total >= 90
-    ? ["ほぼ正解！", "変化の形をしっかり捉えています。"]
+  const messages = scores.total === 100
+    ? ["正解！", "すべて正しい場所に置けました。"]
+    : scores.total >= 90
+      ? ["ほぼ正解！", "変化の形をしっかり捉えています。"]
     : scores.total >= 70
       ? ["かなり近い！", "正解を重ねて、違うところを見てみましょう。"]
       : scores.total >= 45
