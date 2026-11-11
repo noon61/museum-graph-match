@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#f7f2e8" />
+    <meta name="description" content="折れ線グラフをカメラで読み取り、正解との一致率を表示します。" />
+    <title>グラフを重ねてみよう</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <div class="brand-mark" aria-hidden="true">↗</div>
+        <div>
+          <p class="eyebrow">MUSEUM GRAPH CHALLENGE</p>
+          <h1 id="page-title">グラフを重ねてみよう</h1>
+        </div>
+      </header>
+
+      <section id="chooser" class="panel chooser" hidden>
+        <p class="step-label">体験するグラフを選択</p>
+        <h2>5つのグラフ</h2>
+        <p class="lead">展示では、それぞれの軸の横にあるQRコードから直接この画面を開きます。</p>
+        <nav id="graph-list" class="graph-list" aria-label="グラフ一覧"></nav>
+      </section>
+
+      <section id="experience" hidden>
+        <div class="status-row">
+          <span id="graph-name" class="graph-chip"></span>
+          <button id="change-graph" class="text-button" type="button">別のグラフ</button>
+        </div>
+
+        <section id="intro" class="panel intro">
+          <p class="step-label">STEP 1</p>
+          <h2>折れ線を軸に重ねよう</h2>
+          <ol class="instructions">
+            <li><span>1</span>折れ線シートを軸に合わせます</li>
+            <li><span>2</span>紙と4隅の黒いマーカーをすべて写します</li>
+            <li><span>3</span>撮影して一致率を見てみましょう</li>
+          </ol>
+          <button id="start-camera" class="primary-button" type="button">カメラをはじめる</button>
+          <label class="upload-button">
+            写真を選んで試す
+            <input id="photo-input" type="file" accept="image/*" capture="environment" />
+          </label>
+          <p class="privacy-note">木の色と形を端末内で読み取ります。撮影画像は保存・送信しません。</p>
+        </section>
+
+        <section id="camera-panel" class="camera-panel" hidden>
+          <div class="camera-stage">
+            <video id="camera" playsinline muted></video>
+            <div class="alignment-guide" aria-hidden="true">
+              <i></i><i></i><i></i><i></i>
+              <span>紙の4隅のマーカーを入れてください</span>
+            </div>
+          </div>
+          <p id="camera-message" class="camera-message">スマホを横向きにすると合わせやすくなります</p>
+          <button id="capture" class="shutter" type="button" aria-label="撮影して判定">
+            <span></span>
+          </button>
+        </section>
+
+        <section id="result" class="panel result" hidden aria-live="polite">
+          <p class="step-label">RESULT</p>
+          <div class="score-wrap">
+            <span id="score" class="score">--</span><span class="percent">%</span>
+          </div>
+          <p class="score-caption">総合正答率</p>
+          <div class="score-breakdown" aria-label="採点の内訳">
+            <div>
+              <span>上下・左右の向き</span>
+              <strong id="direction-score">--%</strong>
+            </div>
+            <div>
+              <span>場所の正しさ</span>
+              <strong id="position-score">--%</strong>
+            </div>
+          </div>
+          <h2 id="result-title">判定結果</h2>
+          <p id="result-message" class="lead"></p>
+          <div class="result-image">
+            <canvas id="result-canvas"></canvas>
+            <div class="legend"><span class="visitor">あなた</span><span class="answer">正解</span></div>
+          </div>
+          <div class="button-row">
+            <button id="retry" class="secondary-button" type="button">もう一度</button>
+            <button id="toggle-answer" class="primary-button" type="button">正解を表示</button>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <canvas id="work-canvas" hidden></canvas>
+    <script src="./app.js?v=12" type="module"></script>
+  </body>
+</html>
