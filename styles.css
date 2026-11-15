@@ -44,7 +44,7 @@ h2 { margin: 6px 0 12px; font-size: clamp(24px, 7vw, 38px); line-height: 1.2; }
 .placeholder-corners i:nth-child(4) { right: 0; bottom: 0; border-right: 4px solid; border-bottom: 4px solid; }
 
 .primary-button, .secondary-button, .upload-button { display: flex; align-items: center; justify-content: center; min-height: 54px; border-radius: 16px; font-weight: 800; cursor: pointer; }
-.primary-button { width: 100%; border: 0; color: #1e2f4e; background: var(--accent); box-shadow: 0 8px 20px rgba(37,54,86,.2); }
+.primary-button { width: 100%; border: 0; color: white; background: var(--accent); box-shadow: 0 8px 20px rgba(37,54,86,.2); }
 .camera-placeholder .primary-button { position: relative; width: min(100%, 260px); margin: 0 auto; }
 .secondary-button { width: 100%; border: 1px solid var(--line); color: var(--ink); background: white; }
 .upload-button { margin-top: 12px; border: 1px solid rgba(255,255,255,.55); color: white; background: transparent; }
