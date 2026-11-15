@@ -22,7 +22,7 @@ body {
 button, input { font: inherit; }
 button, label { -webkit-tap-highlight-color: transparent; }
 
-.app-shell { width: min(100%, 760px); margin: 0 auto; padding: max(38px, env(safe-area-inset-top)) 21px 48px; }
+.app-shell { width: min(100%, 402px); margin: 0 auto; padding: max(38px, env(safe-area-inset-top)) 21px 48px; }
 .topbar { margin-bottom: 44px; text-align: center; }
 .eyebrow, .step-label { margin: 0 0 4px; letter-spacing: .12em; font-size: 11px; font-weight: 800; color: var(--accent-dark); }
 h1 { margin: 0; color: white; font-size: clamp(27px, 8vw, 38px); font-weight: 800; letter-spacing: .02em; }
@@ -66,18 +66,21 @@ h2 { margin: 6px 0 12px; font-size: clamp(24px, 7vw, 38px); line-height: 1.2; }
 .shutter { display: grid; place-items: center; width: 72px; height: 72px; margin: 16px auto; border: 3px solid white; border-radius: 50%; background: transparent; }
 .shutter span { width: 56px; height: 56px; border-radius: 50%; background: var(--accent); }
 
-.result { color: var(--ink); text-align: center; }
+.result { padding: 24px 0; scroll-margin-top: 18px; border: 0; color: white; text-align: center; background: transparent; box-shadow: none; backdrop-filter: none; }
+.result .step-label { color: white; }
 .score-wrap { display: flex; justify-content: center; align-items: baseline; color: var(--accent); line-height: 1; }
-.score { font-size: clamp(78px, 24vw, 150px); font-weight: 900; letter-spacing: -.07em; }
-.percent { font-size: 28px; font-weight: 900; }
-.score-caption { margin: 3px 0 16px; color: var(--muted); font-size: 13px; font-weight: 800; letter-spacing: .08em; }
+.score { font-size: clamp(78px, 24vw, 104px); font-weight: 900; letter-spacing: -.045em; }
+.percent { margin-left: 7px; font-size: 24px; font-weight: 900; }
+.score-caption { margin: 8px 0 18px; color: rgba(255,255,255,.78); font-size: 13px; font-weight: 800; letter-spacing: .08em; }
 .score-breakdown { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; text-align: left; }
 .score-breakdown div { padding: 14px; border: 1px solid var(--line); border-radius: 14px; background: white; }
 .score-breakdown span { display: block; color: var(--muted); font-size: 12px; font-weight: 700; }
 .score-breakdown strong { display: block; margin-top: 4px; color: var(--ink); font-size: 25px; }
+.result > h2 { color: white; }
+.result > .lead { color: rgba(255,255,255,.78); }
 .result-image { overflow: hidden; margin: 20px 0 16px; border-radius: 15px; background: #dedbd3; }
 #result-canvas { display: block; width: 100%; height: auto; }
-.legend { display: flex; justify-content: center; gap: 22px; padding: 10px; background: white; font-size: 12px; font-weight: 800; }
+.legend { display: flex; justify-content: center; gap: 22px; padding: 10px; color: var(--ink); background: white; font-size: 12px; font-weight: 800; }
 .legend span::before { content: ""; display: inline-block; width: 18px; height: 4px; margin-right: 7px; vertical-align: middle; border-radius: 3px; }
 .legend .visitor::before { background: var(--accent); }
 .legend .answer::before { background: var(--answer); }
