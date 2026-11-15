@@ -55,7 +55,7 @@ function initialize() {
   experience.hidden = !graphKey;
   if (graphKey) {
     $("#graph-name").textContent = GRAPHS[graphKey].name;
-    document.title = `${GRAPHS[graphKey].name}｜グラフを重ねてみよう`;
+    document.title = `${GRAPHS[graphKey].name}｜触れる折れ線グラフ`;
   }
 }
 
@@ -154,7 +154,7 @@ function prepareMarkedPhoto(sourceCanvas) {
     return false;
   }
   $("#graph-name").textContent = graph.name;
-  document.title = `${graph.name}｜グラフを重ねてみよう`;
+  document.title = `${graph.name}｜触れる折れ線グラフ`;
   return true;
 }
 

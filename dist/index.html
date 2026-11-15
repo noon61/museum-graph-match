@@ -3,19 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="theme-color" content="#f7f2e8" />
+    <meta name="theme-color" content="#28446e" />
     <meta name="description" content="折れ線グラフをカメラで読み取り、正解との一致率を表示します。" />
-    <title>グラフを重ねてみよう</title>
+    <title>触れる折れ線グラフ</title>
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
     <main class="app-shell">
       <header class="topbar">
-        <div class="brand-mark" aria-hidden="true">↗</div>
-        <div>
-          <p class="eyebrow">MUSEUM GRAPH CHALLENGE</p>
-          <h1 id="page-title">グラフを重ねてみよう</h1>
-        </div>
+        <h1 id="page-title">触れる折れ線グラフ</h1>
       </header>
 
       <section id="missing-graph" class="panel chooser" hidden>
@@ -25,24 +21,22 @@
       </section>
 
       <section id="experience" hidden>
-        <div class="status-row">
-          <span id="graph-name" class="graph-chip"></span>
+        <div class="experience-heading">
+          <h2 id="graph-name" class="graph-name"></h2>
+          <p>4隅のマーカーがすべて映るようにしてください</p>
         </div>
 
-        <section id="intro" class="panel intro">
-          <p class="step-label">STEP 1</p>
-          <h2>折れ線を軸に重ねよう</h2>
-          <ol class="instructions">
-            <li><span>1</span>折れ線シートを軸に合わせます</li>
-            <li><span>2</span>紙と4隅の黒いマーカーをすべて写します</li>
-            <li><span>3</span>撮影して一致率を見てみましょう</li>
-          </ol>
-          <button id="start-camera" class="primary-button" type="button">カメラをはじめる</button>
+        <section id="intro" class="intro">
+          <div class="camera-placeholder">
+            <div class="placeholder-corners" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+            <p>紙を平らな場所に置き<br />真上から撮影します</p>
+            <button id="start-camera" class="primary-button" type="button">カメラを起動</button>
+          </div>
           <label class="upload-button">
-            写真を選んで試す
+            撮影済みの写真を使う
             <input id="photo-input" type="file" accept="image/*" capture="environment" />
           </label>
-          <p class="privacy-note">木の色と形を端末内で読み取ります。撮影画像は保存・送信しません。</p>
+          <p class="privacy-note">写真は端末内だけで処理し、保存・送信しません</p>
         </section>
 
         <section id="camera-panel" class="camera-panel" hidden>
@@ -53,7 +47,7 @@
               <span>紙の4隅のマーカーを入れてください</span>
             </div>
           </div>
-          <p id="camera-message" class="camera-message">スマホを横向きにすると合わせやすくなります</p>
+          <p id="camera-message" class="camera-message">紙全体と4隅のマーカーを枠内に入れてください</p>
           <button id="capture" class="shutter" type="button" aria-label="撮影して判定">
             <span></span>
           </button>
@@ -90,6 +84,6 @@
     </main>
 
     <canvas id="work-canvas" hidden></canvas>
-    <script src="./app.js?v=15" type="module"></script>
+    <script src="./app.js?v=16" type="module"></script>
   </body>
 </html>
