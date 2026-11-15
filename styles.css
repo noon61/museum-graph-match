@@ -48,9 +48,6 @@ h2 { margin: 6px 0 12px; font-size: clamp(24px, 7vw, 38px); line-height: 1.2; }
 .upload-button input { position: absolute; width: 1px; height: 1px; opacity: 0; }
 .privacy-note { margin: 14px 0 0; text-align: center; color: var(--muted); font-size: 12px; }
 
-.graph-list { display: grid; gap: 10px; }
-.graph-list a { display: flex; justify-content: space-between; padding: 17px 18px; border: 1px solid var(--line); border-radius: 15px; color: var(--ink); background: white; font-weight: 800; text-decoration: none; }
-.graph-list a::after { content: "→"; color: var(--accent); }
 
 .camera-panel { margin: 0 -18px; }
 .camera-stage { position: relative; overflow: hidden; aspect-ratio: 3 / 4; background: #0c110f; }

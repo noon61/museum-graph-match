@@ -18,17 +18,15 @@
         </div>
       </header>
 
-      <section id="chooser" class="panel chooser" hidden>
-        <p class="step-label">体験するグラフを選択</p>
-        <h2>5つのグラフ</h2>
-        <p class="lead">展示では、それぞれの軸の横にあるQRコードから直接この画面を開きます。</p>
-        <nav id="graph-list" class="graph-list" aria-label="グラフ一覧"></nav>
+      <section id="missing-graph" class="panel chooser" hidden>
+        <p class="step-label">MUSEUM GRAPH CHALLENGE</p>
+        <h2>グラフのQRコードを読み取ってください</h2>
+        <p class="lead">展示されているグラフごとのQRコードから、撮影画面を直接開けます。</p>
       </section>
 
       <section id="experience" hidden>
         <div class="status-row">
           <span id="graph-name" class="graph-chip"></span>
-          <button id="change-graph" class="text-button" type="button">別のグラフ</button>
         </div>
 
         <section id="intro" class="panel intro">
@@ -92,6 +90,6 @@
     </main>
 
     <canvas id="work-canvas" hidden></canvas>
-    <script src="./app.js?v=14" type="module"></script>
+    <script src="./app.js?v=15" type="module"></script>
   </body>
 </html>

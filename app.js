@@ -29,7 +29,7 @@ const GRAPHS = {
 };
 
 const $ = (selector) => document.querySelector(selector);
-const chooser = $("#chooser");
+const missingGraph = $("#missing-graph");
 const experience = $("#experience");
 const intro = $("#intro");
 const cameraPanel = $("#camera-panel");
@@ -49,16 +49,9 @@ function graphFromUrl() {
   return Object.hasOwn(GRAPHS, key) ? key : null;
 }
 
-function buildChooser() {
-  $("#graph-list").innerHTML = Object.entries(GRAPHS)
-    .map(([key, graph]) => `<a href="?graph=${key}">${graph.name}</a>`)
-    .join("");
-}
-
 function initialize() {
-  buildChooser();
   graphKey = graphFromUrl();
-  chooser.hidden = Boolean(graphKey);
+  missingGraph.hidden = Boolean(graphKey);
   experience.hidden = !graphKey;
   if (graphKey) {
     $("#graph-name").textContent = GRAPHS[graphKey].name;
@@ -411,7 +404,6 @@ $("#toggle-answer").addEventListener("click", () => {
   $("#toggle-answer").textContent = answerVisible ? "正解を隠す" : "正解を表示";
   renderResult(scoreLine(visitorLine, GRAPHS[graphKey].answer));
 });
-$("#change-graph").addEventListener("click", () => { location.href = location.pathname; });
 window.addEventListener("pagehide", stopCamera);
 
 initialize();
