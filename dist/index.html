@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#28446e" />
     <meta name="description" content="折れ線グラフをカメラで読み取り、正解との一致率を表示します。" />
     <title>触れる折れ線グラフ</title>
-    <link rel="stylesheet" href="./styles.css?v=5" />
+    <link rel="stylesheet" href="./styles.css?v=6" />
   </head>
   <body>
     <main class="app-shell">
@@ -32,10 +32,7 @@
             <p>紙を平らな場所に置き<br />真上から撮影します</p>
             <button id="start-camera" class="primary-button" type="button">カメラを起動</button>
           </div>
-          <label class="upload-button">
-            撮影済みの写真を使う
-            <input id="photo-input" type="file" accept="image/*" capture="environment" />
-          </label>
+          <input id="photo-input" class="diagnostic-photo-input" type="file" accept="image/*" tabindex="-1" aria-hidden="true" />
           <p class="privacy-note">写真は端末内だけで処理し、保存・送信しません</p>
         </section>
 
@@ -84,6 +81,6 @@
     </main>
 
     <canvas id="work-canvas" hidden></canvas>
-    <script src="./app.js?v=17" type="module"></script>
+    <script src="./app.js?v=18" type="module"></script>
   </body>
 </html>
