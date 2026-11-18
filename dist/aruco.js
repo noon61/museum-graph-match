@@ -53,6 +53,34 @@ function sampleCandidate(gray, width, height, quad, threshold) {
   return decodeBits(inner);
 }
 
+function otsuThreshold(gray) {
+  const histogram = new Uint32Array(256);
+  let totalSum = 0;
+  for (const value of gray) {
+    histogram[value] += 1;
+    totalSum += value;
+  }
+  let backgroundCount = 0;
+  let backgroundSum = 0;
+  let maximumVariance = -1;
+  const bestThresholds = [];
+  for (let threshold = 0; threshold < 255; threshold += 1) {
+    backgroundCount += histogram[threshold];
+    backgroundSum += threshold * histogram[threshold];
+    const foregroundCount = gray.length - backgroundCount;
+    if (!backgroundCount || !foregroundCount) continue;
+    const backgroundMean = backgroundSum / backgroundCount;
+    const foregroundMean = (totalSum - backgroundSum) / foregroundCount;
+    const variance = backgroundCount * foregroundCount * (backgroundMean - foregroundMean) ** 2;
+    if (variance > maximumVariance * 1.000001) {
+      maximumVariance = variance;
+      bestThresholds.length = 0;
+      bestThresholds.push(threshold);
+    } else if (variance >= maximumVariance * .999999) bestThresholds.push(threshold);
+  }
+  return bestThresholds.length ? (bestThresholds[0] + bestThresholds.at(-1)) / 2 : 110;
+}
+
 export function detectArucoMarkers(canvas) {
   const source = canvas.getContext("2d", { willReadFrequently: true }).getImageData(0, 0, canvas.width, canvas.height);
   const width = canvas.width, height = canvas.height;
@@ -64,7 +92,10 @@ export function detectArucoMarkers(canvas) {
     mean += gray[i];
   }
   mean /= gray.length;
-  const threshold = Math.max(65, Math.min(145, mean * .55));
+  // Use the image's dark/light distribution rather than a fixed fraction of
+  // the mean. This keeps gray-looking black markers detectable under strong
+  // exhibition lighting, even when dark surroundings lower the global mean.
+  const threshold = Math.max(75, Math.min(175, otsuThreshold(gray)));
   const dark = new Uint8Array(gray.length);
   for (let i = 0; i < gray.length; i += 1) dark[i] = gray[i] < threshold ? 1 : 0;
   const visited = new Uint8Array(gray.length);

@@ -1,4 +1,4 @@
-import { detectArucoMarkers, rectifyFromMarkers } from "./aruco.js?v=3";
+import { detectArucoMarkers, rectifyFromMarkers } from "./aruco.js?v=4";
 
 const GRAPHS = {
   deaths: {
@@ -142,7 +142,7 @@ function prepareMarkedPhoto(sourceCanvas) {
   window.__markerDebug = markers.map(({ id, guessedId, distance, center }) => ({ id, guessedId, distance, center }));
   const detectedGraph = identifyGraph(markers);
   if (!detectedGraph) {
-    alert(`4隅の認識マーカーを読み取れませんでした（${markers.length}/4個）。紙全体と4つの黒いマーカーが写るように、明るい場所でもう一度撮影してください。`);
+    alert(`4隅の認識マーカーを読み取れませんでした（${markers.length}/4個）。紙全体と4つの黒いマーカーが写るように、光の反射を避けてもう一度撮影してください。`);
     return false;
   }
   graphKey = detectedGraph;
@@ -167,12 +167,16 @@ function lineMaterialPixel(r, g, b) {
   // red >= green > blue, with enough brightness and colour difference.
   const redMaterial = r > 125 && r > g * 1.35 && r > b * 1.25 && r - Math.min(g, b) > 45;
   const brightness = (r + g + b) / 3;
+  const maximum = Math.max(r, g, b);
+  const minimum = Math.min(r, g, b);
+  const saturation = maximum ? (maximum - minimum) / maximum : 0;
   const woodMaterial =
-    // Use the light wooden surface, excluding its dark shadow and burned edge.
-    // Including the shadow shifts the displayed centreline away from the wood.
-    brightness > 100 && brightness < 235 &&
-    r >= g * .96 && g >= b * .94 &&
-    r - b > 25 && g - b > 8;
+    // Strong illumination can give the entire white sheet a warm colour cast.
+    // Relative colour saturation separates the wooden surface from that paper,
+    // while the wider brightness range keeps slightly overexposed wood visible.
+    brightness > 85 && brightness < 250 &&
+    r >= g * .95 && g >= b * .94 &&
+    saturation > .16 && r - b > 24 && g - b > 7;
   return redMaterial || woodMaterial;
 }
 
@@ -243,13 +247,15 @@ function detectPlot(canvas) {
   }
 
   if (bestSequence.length < 5) {
-    return { left: width * .20, right: width * .80, top: height * .30, bottom: height * .76 };
+    return calibratedPlot(canvas);
   }
 
   const runs = bestSequence.map((y) => longestHorizontalRun(image, width, y)).filter(Boolean);
   return {
-    left: median(runs.map((run) => run.left)),
-    right: median(runs.map((run) => run.right)),
+    // A wooden piece can cover and split one gridline. The outermost endpoints
+    // from all horizontal gridlines preserve the real left/right border.
+    left: Math.min(...runs.map((run) => run.left)),
+    right: Math.max(...runs.map((run) => run.right)),
     top: bestSequence[0],
     bottom: bestSequence.at(-1),
   };
@@ -271,7 +277,7 @@ function extractLine(canvas, samples) {
   const context = canvas.getContext("2d", { willReadFrequently: true });
   const { width, height } = canvas;
   const image = context.getImageData(0, 0, width, height).data;
-  const plot = calibratedPlot(canvas);
+  const plot = detectPlot(canvas);
   const values = [];
   let detected = 0;
 
@@ -292,7 +298,9 @@ function extractLine(canvas, samples) {
       const y = ys[Math.floor(ys.length / 2)];
       values.push((y - plot.top) / (plot.bottom - plot.top));
       detected += 1;
-    } else values.push(null);
+    } else {
+      values.push(null);
+    }
   }
 
   if (detected / samples < .45) return null;
@@ -347,7 +355,6 @@ function renderResult(scores) {
   resultCanvas.height = capturedImage.height;
   const context = resultCanvas.getContext("2d");
   context.drawImage(capturedImage, 0, 0);
-  drawPolyline(context, visitorLine, visitorPlot, "#ed4b2f", Math.max(7, resultCanvas.width * .009));
   if (answerVisible) drawPolyline(context, GRAPHS[graphKey].answer, visitorPlot, "#12a36d", Math.max(7, resultCanvas.width * .009), true);
   $("#score").textContent = scores.total;
   $("#direction-score").textContent = `${scores.direction}%`;
@@ -369,7 +376,7 @@ function analyzeCanvas(canvas) {
   const answer = GRAPHS[graphKey].answer;
   const detection = extractLine(canvas, answer.length);
   if (!detection) {
-    alert("木の折れ線を十分に読み取れませんでした。木と背景の色が分かるように、軸全体を明るい場所で撮影してください。");
+    alert("木の折れ線を十分に読み取れませんでした。強い反射を避け、木と背景の色が分かる角度で撮影してください。");
     return;
   }
   capturedImage = document.createElement("canvas");
