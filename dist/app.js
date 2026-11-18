@@ -355,7 +355,7 @@ function renderResult(scores) {
   resultCanvas.height = capturedImage.height;
   const context = resultCanvas.getContext("2d");
   context.drawImage(capturedImage, 0, 0);
-  if (answerVisible) drawPolyline(context, GRAPHS[graphKey].answer, visitorPlot, "#12a36d", Math.max(7, resultCanvas.width * .009), true);
+  if (answerVisible) drawPolyline(context, GRAPHS[graphKey].answer, visitorPlot, "#28446e", Math.max(7, resultCanvas.width * .009), true);
   $("#score").textContent = scores.total;
   $("#direction-score").textContent = `${scores.direction}%`;
   $("#position-score").textContent = `${scores.position}%`;
