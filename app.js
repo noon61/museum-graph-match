@@ -43,6 +43,9 @@ let capturedImage;
 let visitorLine = [];
 let visitorPlot;
 let answerVisible = false;
+let autoScanTimer;
+let stableMarkerFrames = 0;
+let autoCaptureInProgress = false;
 
 function graphFromUrl() {
   const key = new URLSearchParams(location.search).get("graph");
@@ -73,12 +76,18 @@ async function startCamera() {
     intro.hidden = true;
     resultPanel.hidden = true;
     cameraPanel.hidden = false;
+    stableMarkerFrames = 0;
+    autoCaptureInProgress = false;
+    $("#camera-message").textContent = "4隅のマーカーを映すと自動で採点します";
+    scheduleMarkerScan();
   } catch (error) {
     alert("カメラを開けませんでした。ブラウザのカメラ許可を確認して、もう一度お試しください。");
   }
 }
 
 function stopCamera() {
+  clearTimeout(autoScanTimer);
+  autoScanTimer = undefined;
   stream?.getTracks().forEach((track) => track.stop());
   stream = undefined;
 }
@@ -94,6 +103,43 @@ function sourceToCanvas(source, sourceWidth, sourceHeight) {
 
 function captureVideoFrame() {
   return sourceToCanvas(video, video.videoWidth, video.videoHeight);
+}
+
+function scheduleMarkerScan(delay = 450) {
+  clearTimeout(autoScanTimer);
+  if (stream && !cameraPanel.hidden && !autoCaptureInProgress) {
+    autoScanTimer = window.setTimeout(scanCameraMarkers, delay);
+  }
+}
+
+function scanCameraMarkers() {
+  if (!stream || cameraPanel.hidden || autoCaptureInProgress || !video.videoWidth) return;
+  const sourceCanvas = captureVideoFrame();
+  const markers = detectArucoMarkers(sourceCanvas);
+  const expectedIds = GRAPHS[graphKey].markerIds;
+  const knownCount = expectedIds.filter(id => markers.some(marker => marker.id === id)).length;
+  const markerSetReady = knownCount === 4 || (knownCount >= 3 && markers.length >= 4);
+
+  if (markerSetReady) {
+    stableMarkerFrames += 1;
+    $("#camera-message").textContent = stableMarkerFrames >= 2
+      ? "認識しました。採点しています…"
+      : "4隅を認識中です。そのまま動かさないでください";
+  } else {
+    stableMarkerFrames = 0;
+    $("#camera-message").textContent = `マーカーを認識中（${Math.min(knownCount, 4)}/4）`;
+  }
+
+  if (stableMarkerFrames >= 2) {
+    autoCaptureInProgress = true;
+    if (prepareMarkedPhoto(sourceCanvas)) {
+      analyzeCanvas(workCanvas);
+      return;
+    }
+    autoCaptureInProgress = false;
+    stableMarkerFrames = 0;
+  }
+  scheduleMarkerScan();
 }
 
 function identifyGraph(markers) {
@@ -411,10 +457,6 @@ function loadPhoto(file) {
 }
 
 $("#start-camera").addEventListener("click", startCamera);
-$("#capture").addEventListener("click", () => {
-  const sourceCanvas = captureVideoFrame();
-  if (prepareMarkedPhoto(sourceCanvas)) analyzeCanvas(workCanvas);
-});
 $("#photo-input").addEventListener("change", (event) => loadPhoto(event.target.files[0]));
 $("#retry").addEventListener("click", () => {
   resultPanel.hidden = true;
